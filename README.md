@@ -1,4 +1,4 @@
-# SERVIX
+# SERVITOR
 A Basic HTTP Server in C
 
 ## Requirements
@@ -6,4 +6,4 @@ A Basic HTTP Server in C
 
 ## Installation
 
-## Running Servix
+## Running Servitor
