@@ -1,4 +1,4 @@
-# Servix Journal
+# Servitor Journal
 In this project I will be a lot about networking and how socket programming in C works. As such, I have decided to document my journey in this project with things I learnt and implemented.
 
 ### June 15, 2024
