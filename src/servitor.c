@@ -12,11 +12,14 @@ int main(int argc, char const** argv) {
 	// AF_LOCAL is for processes on the same host
 	// AF_INET is for IPv4, and AF_INET6 is for IPv6
 	int server_fd, new_socket;
+	ssize_t valread;
 	struct sockaddr_in address;
 	socklen_t addrlen = sizeof(address);
-	int opt = 1;
-	int port = atoi(argv[1]);
-	if (server_fd = socket(AF_INET, SOCK_STREAM, 0) < 0) {
+	const int opt = 1;
+	const int port = 8080;
+	const char* hello = "Hello from server";
+	char buffer[1024] = { 0 };
+	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("ERROR: Socket failed");
 		exit(EXIT_FAILURE);
 	}
@@ -35,4 +38,25 @@ int main(int argc, char const** argv) {
 		perror("Error: Bind failed");
 		exit(EXIT_FAILURE);
 	}
-}
+	
+	if (listen(server_fd, 3) < 0) {
+		perror("Error: Listen failed");
+		exit(EXIT_FAILURE);
+	}
+
+	if ((new_socket = accept(server_fd, (struct sockaddr*)&address, &addrlen)) < 0) {
+		perror("Error: Could not accept conn");
+		exit(EXIT_FAILURE);
+	}
+
+	valread = read(new_socket, buffer, 1023);
+
+	printf("%s\n", buffer);
+	send(new_socket, hello, strlen(hello), 0);
+	printf("Hello message sent!\n");
+
+	close(new_socket);
+	close(server_fd);
+
+	return 0;
+}	
