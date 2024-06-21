@@ -6,7 +6,9 @@
 #include <sys/types.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include "http.h"
 #define PORT 8080
+#define BUFFER_SIZE 1024
 
 int main(int argc, char const** argv) {
 	// AF_LOCAL is for processes on the same host
@@ -18,7 +20,7 @@ int main(int argc, char const** argv) {
 	const int opt = 1;
 	const int port = 8080;
 	const char* hello = "Hello from server";
-	char buffer[1024] = { 0 };
+	char buffer[BUFFER_SIZE];
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("ERROR: Socket failed");
 		exit(EXIT_FAILURE);
@@ -49,8 +51,13 @@ int main(int argc, char const** argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	valread = read(new_socket, buffer, 1023);
-
+	valread = read(new_socket, buffer, BUFFER_SIZE - 1);
+	if (valread < 0) {
+		perror("Error: Failed to recv ");
+		exit(EXIT_FAILURE);
+	}
+	buffer[valread] = '\0';
+	struct HTTP_Request req;
 	printf("%s\n", buffer);
 	send(new_socket, hello, strlen(hello), 0);
 	printf("Hello message sent!\n");
