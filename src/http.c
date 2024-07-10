@@ -1,15 +1,24 @@
 #include "http.h"
 #include <string.h>
 #include <stdio.h>
-struct HTTP_Request parse_request(char* request_str) {
+
+void parse_request(char* raw_request, struct HTTP_Request* req) {
     struct HTTP_Request req;
-    req.method = strtok(request_str, " ");
-    req.path = strtok(NULL, " ");
-    req.http_version = strtok(NULL, " ");
-    return req;
+    char *line = strtok(raw_request, "\r\n");
+    sscanf(line, "%s %s %s", req->method, req->path, req->http_version);
+
+    req->header_count = 0;
+    while ((line = strtok(NULL, "\r\n")) && strlen(line) > 0) {
+        sscanf(line, "%[^:]: %[^\r\n]", req->headers[req->header_count][0], req->headers[req->header_count][1]);
+        req->header_count++;
+    }
+
+    if ((line = strtok(NULL, ""))) {
+        req->body = malloc(sizeof(line));
+        strncpy(req->body, line, sizeof(req->body));
+    }
 }
 
-struct HTTP_Response send_response(struct HTTP_Request req) {
-    struct HTTP_Response res;
-    return res;
+void create_response(struct HTTP_Response res, const char* body) {
+
 }

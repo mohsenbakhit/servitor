@@ -5,7 +5,7 @@
 
 struct HTTP_Request {
     char method[16];
-    char* path;
+    char path[256];
     char http_version[16];
     char headers[MAX_HEADERS][2][MAX_HEADERS_LEN];
     int header_count;
@@ -21,7 +21,7 @@ struct HTTP_Response {
     char* body;
 };
 
-struct HTTP_Request parse_request(char* request_str);
+void parse_request(char* request_str, struct HTTP_Request* req);
 
-struct HTTP_Response create_response(struct HTTP_Request req);
+void create_response(struct HTTP_Response res, const char* body);
 #endif //HTTP_H

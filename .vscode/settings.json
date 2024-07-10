@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "http.h": "c",
+        "string.h": "c"
+    }
+}
