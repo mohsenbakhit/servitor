@@ -10,7 +10,7 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
-int main(int argc, char const** argv) {
+int main() {
 	// AF_LOCAL is for processes on the same host
 	// AF_INET is for IPv4, and AF_INET6 is for IPv6
 	int server_fd, new_socket;
@@ -19,7 +19,6 @@ int main(int argc, char const** argv) {
 	socklen_t addrlen = sizeof(address);
 	const int opt = 1;
 	const int port = 8080;
-	const char* hello = "Hello from server";
 	char buffer[BUFFER_SIZE];
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		perror("ERROR: Socket failed");
@@ -57,14 +56,20 @@ int main(int argc, char const** argv) {
 		exit(EXIT_FAILURE);
 	}
 	buffer[valread] = '\0';
-	struct HTTP_Request* req;
-	struct HTTP_Response* res;
+    struct HTTP_Request *req = (struct HTTP_Request *)malloc(sizeof(struct HTTP_Request));
+    struct HTTP_Response *res = (struct HTTP_Response *)malloc(sizeof(struct HTTP_Response));	if (!req || !res) {
+        perror("Error: Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
 	printf("%s\n", buffer);
 	parse_request(buffer, req);
 	create_response(res, req->body);
-	send_response(new_socket, res);
-	printf("Hello message sent!\n");
+	send_http_response(new_socket, res);
+	printf("message sent!\n");
 
+	free(req);
+	free(res);
 	close(new_socket);
 	close(server_fd);
 

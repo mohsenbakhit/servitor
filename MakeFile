@@ -1,5 +1,0 @@
-server: src/servitor.c
-	gcc src/servitor.c -o servitor
-
-clean:
-	rm servitor

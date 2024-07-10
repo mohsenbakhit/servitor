@@ -1,9 +1,11 @@
 #include "http.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+
 
 void parse_request(char* raw_request, struct HTTP_Request* req) {
-    struct HTTP_Request req;
     char *line = strtok(raw_request, "\r\n");
     sscanf(line, "%s %s %s", req->method, req->path, req->http_version);
 
@@ -15,7 +17,8 @@ void parse_request(char* raw_request, struct HTTP_Request* req) {
 
     if ((line = strtok(NULL, ""))) {
         req->body = malloc(sizeof(line));
-        strncpy(req->body, line, sizeof(req->body));
+        strncpy(req->body, line, sizeof(req->body) - 1);
+        req->body[sizeof(req->body) - 1] = '\0';
     }
 }
 
