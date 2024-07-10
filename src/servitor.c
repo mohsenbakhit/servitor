@@ -57,9 +57,12 @@ int main(int argc, char const** argv) {
 		exit(EXIT_FAILURE);
 	}
 	buffer[valread] = '\0';
-	struct HTTP_Request req;
+	struct HTTP_Request* req;
+	struct HTTP_Response* res;
 	printf("%s\n", buffer);
-	send(new_socket, hello, strlen(hello), 0);
+	parse_request(buffer, req);
+	create_response(res, req->body);
+	send_response(new_socket, res);
 	printf("Hello message sent!\n");
 
 	close(new_socket);

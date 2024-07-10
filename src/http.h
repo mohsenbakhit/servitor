@@ -23,5 +23,7 @@ struct HTTP_Response {
 
 void parse_request(char* request_str, struct HTTP_Request* req);
 
-void create_response(struct HTTP_Response res, const char* body);
+void create_response(struct HTTP_Response *res, const char* body);
+
+void send_response(int client_socket, const struct HTTP_Response* res);
 #endif //HTTP_H
