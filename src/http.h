@@ -1,14 +1,27 @@
 #ifndef HTTP_H
 #define HTTP_H
+#define MAX_HEADERS 20
+#define MAX_HEADERS_LEN 256
 
 struct HTTP_Request {
-    char* method;
+    char method[16];
     char* path;
-    char* http_version;
+    char http_version[16];
+    char headers[MAX_HEADERS][2][MAX_HEADERS_LEN];
+    int header_count;
+    char* body;
 };
 
 struct HTTP_Response {
-
+    char http_version[16];
+    int status_code;
+    char reason_phrase[8];
+    char headers[MAX_HEADERS][2][MAX_HEADERS_LEN];
+    int header_count;
+    char* body;
 };
+
 struct HTTP_Request parse_request(char* request_str);
+
+struct HTTP_Response create_response(struct HTTP_Request req);
 #endif //HTTP_H
